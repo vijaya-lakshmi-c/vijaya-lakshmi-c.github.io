@@ -1,45 +1,55 @@
+document.addEventListener("DOMContentLoaded", () => {
 
-const menuBtn = document.getElementById("menuBtn");
-const menu = document.getElementById("menu");
-const closeBtn = document.getElementById("closeBtn");
+  const menu = document.getElementById("menu");
+  const menuBtn = document.getElementById("menuBtn");
+  const closeBtn = document.getElementById("closeBtn");
 
-window.addEventListener("load", () => {
-  if (window.location.hash) {
-    history.replaceState(null, null, ' ');
-    window.scrollTo(0, 0);
-  }
-});
-
-menuBtn.addEventListener("click", () => {
-  menu.classList.toggle("hidden");
-});
-
-document.querySelectorAll('.menu a').forEach(link => {
-  link.addEventListener('click', function(e){
-    e.preventDefault();
-
-    const target = document.querySelector(this.getAttribute('href'));
-
-    target.scrollIntoView({
-      behavior: "smooth"
-    });
-
-    menu.classList.add("hidden");
+  menuBtn.addEventListener("click", () => {
+    menu.classList.add("active");
   });
-});
 
-closeBtn.addEventListener("click", () => {
-  menu.classList.add("hidden");
-});
-
-window.onload = function () {
-  window.scrollTo(0, 0);
+ closeBtn.onclick = () => {
+  document.getElementById("menu").classList.remove("active");
 };
+  document.querySelectorAll("#menu a").forEach(link => {
+    link.addEventListener("click", () => {
+      menu.classList.remove("active");
+    });
+  });
 
+});
+
+// =========================================
+// FIX: Smooth scroll + remove #hash
+// =========================================
+
+// disable browser remembering scroll
 if ('scrollRestoration' in history) {
   history.scrollRestoration = 'manual';
 }
 
-window.onload = () => {
+document.querySelectorAll('a[href^="#"]').forEach(link => {
+  link.addEventListener("click", function (e) {
+    e.preventDefault();
+
+    const target = document.querySelector(this.getAttribute("href"));
+
+    if (target) {
+      target.scrollIntoView({ behavior: "smooth" });
+
+      // 🔥 remove #contact from URL
+      setTimeout(() => {
+        history.replaceState(null, null, " ");
+      }, 300);
+    }
+  });
+});
+
+
+// =========================================
+// FORCE TOP ON REFRESH
+// =========================================
+
+window.addEventListener("load", () => {
   window.scrollTo(0, 0);
-};
+});
